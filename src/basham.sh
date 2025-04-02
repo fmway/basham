@@ -23,6 +23,23 @@ if [[ $a1 == "new" ]]; then
     fi
 fi
 
+if [[ $a1 == "delete" ]]; then
+    dir_path=$2
+    if [[ $a2 == "" ]]; then
+        echo "I can't delete something that doesn't exist... unless if nothing exists and if existing mean it's true that it exists, that I can delete it yet it would stay exists even if I delete its existence." >&2
+        exit 1
+    elif [[ $a2 == " " ]]; then
+        echo "I can't delete a goddamn space, I'm not Okuyasu Nijimura damn it! " >&2
+        exit 1
+    elif [[ -d "$dir_path" && -f "$dir_path/main.asm" ]]; then
+        echo "Deleting project: $dir_path"
+        rm -r "$dir_path"
+    else
+        echo "Is this really a legit assembly project?" >&2
+        exit 1
+    fi
+fi
+
 if [[ $a1 == "build" ]]; then
     if [[ -n "$a2" && $a2 != " " ]]; then
         set -e
