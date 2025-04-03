@@ -33,7 +33,7 @@ fi
 
 if [[ $a1 == "${jobs[1]}" ]]; then
     echo "Upgrading script..."
-    sudo curl -o /usr/local/bin/basham.sh "https://github.com/lordpaijo/basham/blob/master/src/basham.sh"
+    sudo curl -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
     echo "Done!"
     is_acceptable=true
     exit 0
