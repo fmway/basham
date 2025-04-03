@@ -14,7 +14,7 @@ $ cd basham
 
 Add the script to your path and make it executable.
 ```
-$ mv src/basham.sh /usr/local/bin
+$ mv src/basham.sh /usr/local/bin/basham.sh
 $ chmod +x /usr/local/bin/basham.sh
 ```
 
@@ -28,10 +28,13 @@ List of available arguments:
 | Arguments | Functions |
 |-----------|-----------|
 | `new` | Initiate a new project. |
+| `upgrade` | Upgrade the script system wide. |
 | `delete` | Delete an existing project. |
-| `build` | Build a main executable the project and put the executable into `build` directory. |
-| `test` | Build a test executable and run it. |
-| `run` | Run the main executable. |
+| `update` | Update an existing project. |
+| `search` | Search for assembly files. |
+| `build` | Build the main executable of the project and putting it into `build` directory. |
+| `test` | Build the test executable and putting it into `test` directory before running it. |
+| `run` | Rebuild and run the main executable . |
 
 ---
 
