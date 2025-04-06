@@ -90,6 +90,7 @@ Fortunately, there are more than one specifier (which is unfortunate for me to m
 |------------|-----------|
 | `--arch`   | Specify the build architecture |
 | `--help`   | Show help message with usage instructions |
+| `--git`    | Initialize git when making a new project |
 
 ---
 

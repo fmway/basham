@@ -110,6 +110,7 @@ case "$a1" in
                     git init --initial-branch=main
                     echo "build/" >> .gitignore
                     echo "test/" >> .gitignore
+                    echo ".DS_Store" >> .gitignore  # optional for macOS
                 )
                 echo "Initialized Git repository in $a2/"
         fi
