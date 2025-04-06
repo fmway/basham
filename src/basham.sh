@@ -1,24 +1,67 @@
 #!/bin/bash
 
-set -e  # exit on error
+set -e
 
 parent_dir=$(pwd)
 script_name=$(basename "$0")
+POSITIONAL=()
 jobs=("new" "upgrade" "delete" "update" "search" "build" "test" "run")
+
+# Default architecture
+arch="x86"
+
+# Parse arguments and detect --arch
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --arch)
+            shift
+            arch="$1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            ;;
+    esac
+    shift
+done
+
+# Restore positional arguments
+set -- "${POSITIONAL[@]}"
 a1=$1
 a2=$2
 a3=$3
 
-# Validation
 validate_name() {
     if [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]]; then
-        echo "Invalid project name: '$1'" >&2
+        echo "Invalid name: '$1'" >&2
         return 1
     fi
     return 0
 }
 
-# Main
+build_asm() {
+    local input=$1
+    local output=$2
+
+    case "$arch" in
+        x86)
+            nasm -f elf32 -o "$output.o" "$input"
+            ld -m elf_i386 -o "$output" "$output.o"
+            ;;
+        arm32)
+            arm-none-eabi-as -o "$output.o" "$input"
+            arm-none-eabi-ld -o "$output" "$output.o"
+            ;;
+        arm64)
+            aarch64-linux-gnu-as -o "$output.o" "$input"
+            aarch64-linux-gnu-ld -o "$output" "$output.o"
+            ;;
+        *)
+            echo "Unsupported architecture: $arch" >&2
+            exit 1
+            ;;
+    esac
+}
+
 case "$a1" in
     "new")
         if ! validate_name "$a2"; then
@@ -29,15 +72,11 @@ case "$a1" in
         mkdir -p "$a2/build" "$a2/test"
         touch "$a2/main.asm"
         cp "$0" "$a2/"
-        echo "Finished preparing your project in: $parent_dir/$a2. Job done!"
+        echo "Finished preparing your project in: $parent_dir/$a2"
         ;;
 
     "upgrade")
         echo "Upgrading script..."
-        if ! sudo -v; then
-            echo "Failed to gain sudo privileges!" >&2
-            exit 1
-        fi
         sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
         sudo chmod +x /usr/local/bin/basham.sh
         echo "Upgrade complete!"
@@ -77,32 +116,25 @@ case "$a1" in
 
     "build")
         src=${a2:-main.asm}
-        echo "Building $src..."
-        nasm -f elf32 -o build/main.o "$src"
-        ld -m elf_i386 -o build/main build/main.o
+        echo "Building $src for $arch..."
+        build_asm "$src" "build/main"
         ;;
 
     "test")
         src=${a2:-main.asm}
-        echo "Testing $src..."
-        nasm -f elf32 -o test/test.o "$src"
-        ld -m elf_i386 -o test/test test/test.o
+        echo "Testing $src for $arch..."
+        build_asm "$src" "test/test"
         exec ./test/test
         ;;
 
     "run")
-        echo "Running..."
-        nasm -f elf32 -o build/main.o main.asm
-        ld -m elf_i386 -o build/main build/main.o
+        echo "Running for $arch..."
+        build_asm "main.asm" "build/main"
         exec ./build/main
         ;;
 
     *)
-        if [[ -n "$a1" ]]; then
-            echo -e "What the hell are you trying to cast here? What are you, some kind of wizard from Hogwarts?\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
-        else
-            echo -e "You put nothing... What do you want me to do? Pray to God? Well, thank you because I always do.\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
-        fi
+        echo -e "Unknown command: '$a1'\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
         exit 1
         ;;
 esac
