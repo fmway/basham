@@ -3,7 +3,13 @@
 A simple bash script to manage your assembly project.
 
 ## Dependencies
-- nasm
+- binutils
+- curl
+- nasm (x86)
+- arm-none-eabi-as (ARM32)
+- arm-none-eabi-ld (ARM32)
+- aarch64-linux-gnu-as (ARM64)
+- aarch64-linux-gnu-ld (ARM64)
 
 ## Install
 Clone and `cd` to the repo.
