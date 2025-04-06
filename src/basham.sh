@@ -10,12 +10,39 @@ jobs=("new" "upgrade" "delete" "update" "search" "build" "test" "run")
 # Default architecture
 arch="x86"
 
-# Parse arguments and detect --arch
+show_help() {
+    cat <<EOF
+Usage: $script_name [command] [options]
+
+Commands:
+  new <project_name>        Create a new assembly project
+  upgrade                   Upgrade basham script to latest version
+  delete <project_name>     Delete an existing project
+  update <project_name>     Update script inside an existing project
+  search                    Search for .asm files in current directory
+  build [file.asm]          Assemble source (default: main.asm) to build/
+  test [file.asm]           Assemble and execute in test/ (default: main.asm)
+  run                       Build and execute main.asm in build/
+  --help                    Show this help message
+  --arch <arch>             Set target architecture (x86, arm32, arm64)
+
+Examples:
+  $script_name new myproj
+  $script_name build --arch arm64
+  $script_name test myfile.asm --arch x86
+EOF
+}
+
+# Parse arguments and detect --arch and --help
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --arch)
             shift
             arch="$1"
+            ;;
+        --help)
+            show_help
+            exit 0
             ;;
         *)
             POSITIONAL+=("$1")
@@ -134,7 +161,8 @@ case "$a1" in
         ;;
 
     *)
-        echo -e "Unknown command: '$a1'\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
+        echo -e "Unknown command: '$a1'\n"
+        show_help
         exit 1
         ;;
 esac
