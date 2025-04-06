@@ -52,6 +52,14 @@ And you're good to go.
 
 It's as simple as calling `basham.sh` followed by an argument.
 
+```sh
+$ basham.sh new blablablablablabla
+$ basham.sh build --arch x86
+$ basham.sh run --arch x86
+```
+
+### Arguments
+
 List of available arguments:
 | Arguments | Functions |
 |-----------|-----------|
@@ -63,6 +71,13 @@ List of available arguments:
 | `build` | Build the main executable of the project and putting it into `build` directory. |
 | `test` | Build the test executable and putting it into `test` directory before running it. |
 | `run` | Rebuild and run the main executable . |
+
+### Specifiers
+
+Fortunately, there's only one specifier.
+| Specifiers | Functions |
+|------------|-----------|
+| `--arch`   | Specify the build architecture (Default: x86) |
 
 ---
 
