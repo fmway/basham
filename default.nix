@@ -3,7 +3,7 @@ with pkgs; let
   replaces = {
     "#!/bin/bash" = "#!/bin/env ${lib.getExe bash}";
     "nasm" = lib.getExe' coreboot-toolchain.x64 "nasm";
-    "ld " = "${lib.getExe' coreboot-toolchain.x64 "x86_64-elf-ld"} ";
+    " ld " = " ${lib.getExe' coreboot-toolchain.x64 "x86_64-elf-ld"} ";
     "aarch64-linux-gnu-as" = lib.getExe' coreboot-toolchain.aarch64 "aarch64-elf-as";
     "aarch64-linux-gnu-ld" = lib.getExe' coreboot-toolchain.aarch64 "aarch64-elf-ld";
     "arm-none-eabi-as" = lib.getExe' coreboot-toolchain.arm "arm-eabi-as";
