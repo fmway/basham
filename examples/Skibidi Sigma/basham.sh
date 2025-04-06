@@ -10,6 +10,11 @@ a2=$2
 a3=$3
 
 # Validation
+if ! sudo -v; then
+    echo "Failed to gain sudo privileges!"
+    exit 1
+fi
+
 validate_name() {
     if [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]]; then
         echo "Invalid project name: '$1'" >&2
@@ -34,12 +39,8 @@ case "$a1" in
 
     "upgrade")
         echo "Upgrading script..."
-        if ! sudo -v; then
-            echo "Failed to gain sudo privileges!" >&2
-            exit 1
-        fi
         sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
-        sudo chmod +x /usr/local/bin/basham.sh
+        chmod +x /usr/local/bin/basham.sh
         echo "Upgrade complete!"
         ;;
 
