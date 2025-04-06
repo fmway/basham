@@ -59,7 +59,7 @@ $ basham.sh run --arch x86_64
 ```
 
 ## Nix Usage
-If you don't want install it, you can execute via `nix run`
+If you don't want to install it, you can execute via `nix run`
 ```sh
 $ nix run github:lordpaijo/basham -- blablablablablabla
 ```
@@ -85,7 +85,7 @@ List of available arguments:
 
 ### Specifiers
 
-Fortunately, there's only one specifier.
+Fortunately, there are more than one specifier (which is unfortunate for me to maintain).
 | Specifiers | Functions |
 |------------|-----------|
 | `--arch`   | Specify the build architecture |
