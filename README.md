@@ -3,13 +3,13 @@
 A simple bash script to manage your assembly project.
 
 ## Dependencies
-- binutils
-- curl
-- nasm (x86_64)
-- arm-none-eabi-as (armv7l)
-- arm-none-eabi-ld (armv7l)
-- aarch64-linux-gnu-as (aarch64)
-- aarch64-linux-gnu-ld (aarch64)
+- `binutils`
+- `curl`
+- `nasm` (x86_64)
+- `arm-none-eabi-as` (armv7l)
+- `arm-none-eabi-ld` (armv7l)
+- `aarch64-linux-gnu-as` (aarch64)
+- `aarch64-linux-gnu-ld` (aarch64)
 
 ### Here's how you can install them:
 - MacOS (Homebrew)
@@ -23,7 +23,7 @@ $ brew install curl nasm gcc@13 arm-none-eabi-gcc aarch64-elf-gcc arm-none-eabi-
 $ sudo apt install curl gcc-arm-none-eabi binutils-arm-none-eabi binutils-aarch64-linux-gnu
 ```
 
-- Fedora
+- Fedora/CentOS
 ```sh
 $ sudo dnf install curl arm-none-eabi-gcc-cs arm-none-eabi-binutils binutils-aarch64-linux-gnu
 ```
