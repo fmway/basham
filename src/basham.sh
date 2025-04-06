@@ -7,8 +7,8 @@ script_name=$(basename "$0")
 POSITIONAL=()
 jobs=("new" "upgrade" "delete" "update" "search" "build" "test" "run")
 
-# Default architecture
-arch="x86"
+# >> Detect devices architecture
+arch=$(uname -m)
 
 show_help() {
     cat <<EOF
@@ -24,12 +24,12 @@ Commands:
   test [file.asm]           Assemble and execute in test/ (default: main.asm)
   run                       Build and execute main.asm in build/
   --help                    Show this help message
-  --arch <arch>             Set target architecture (x86, arm32, arm64)
+  --arch <arch>             Set target architecture (x86_64, armv7l, aarch64)
 
 Examples:
   $script_name new myproj
-  $script_name build --arch arm64
-  $script_name test myfile.asm --arch x86
+  $script_name build --arch x86_64
+  $script_name test myfile.asm --arch x86_64
 EOF
 }
 
@@ -70,15 +70,15 @@ build_asm() {
     local output=$2
 
     case "$arch" in
-        x86)
+        x86_64)
             nasm -f elf32 -o "$output.o" "$input"
             ld -m elf_i386 -o "$output" "$output.o"
             ;;
-        arm32)
+        armv7l)
             arm-none-eabi-as -o "$output.o" "$input"
             arm-none-eabi-ld -o "$output" "$output.o"
             ;;
-        arm64)
+        aarch64)
             aarch64-linux-gnu-as -o "$output.o" "$input"
             aarch64-linux-gnu-ld -o "$output" "$output.o"
             ;;
@@ -103,10 +103,9 @@ case "$a1" in
         ;;
 
     "upgrade")
-        echo "Upgrading script..."
         sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
         sudo chmod +x /usr/local/bin/basham.sh
-        echo "Upgrade complete!"
+        echo "Basham script updated!"
         ;;
 
     "delete")

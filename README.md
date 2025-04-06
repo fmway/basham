@@ -5,11 +5,11 @@ A simple bash script to manage your assembly project.
 ## Dependencies
 - binutils
 - curl
-- nasm (x86)
-- arm-none-eabi-as (ARM32)
-- arm-none-eabi-ld (ARM32)
-- aarch64-linux-gnu-as (ARM64)
-- aarch64-linux-gnu-ld (ARM64)
+- nasm (x86_64)
+- arm-none-eabi-as (armv7l)
+- arm-none-eabi-ld (armv7l)
+- aarch64-linux-gnu-as (aarch64)
+- aarch64-linux-gnu-ld (aarch64)
 
 ### Here's how you can install them:
 - MacOS (Homebrew)
@@ -54,8 +54,8 @@ It's as simple as calling `basham.sh` followed by an argument.
 
 ```sh
 $ basham.sh new blablablablablabla
-$ basham.sh build --arch x86
-$ basham.sh run --arch x86
+$ basham.sh build --arch x86_64
+$ basham.sh run --arch x86_64
 ```
 
 ## Nix Usage
@@ -88,7 +88,7 @@ List of available arguments:
 Fortunately, there's only one specifier.
 | Specifiers | Functions |
 |------------|-----------|
-| `--arch`   | Specify the build architecture (Default: x86) |
+| `--arch`   | Specify the build architecture |
 | `--help`   | Show help message with usage instructions |
 
 ---
