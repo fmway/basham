@@ -78,6 +78,7 @@ Fortunately, there's only one specifier.
 | Specifiers | Functions |
 |------------|-----------|
 | `--arch`   | Specify the build architecture (Default: x86) |
+| `--help`   | Show help message with usage instructions |
 
 ---
 
