@@ -1,152 +1,108 @@
 #!/bin/bash
 
+set -e  # exit on error
+
 parent_dir=$(pwd)
+script_name=$(basename "$0")
 jobs=("new" "upgrade" "delete" "update" "search" "build" "test" "run")
-is_acceptable=false
 a1=$1
 a2=$2
 a3=$3
 
-if ! sudo -v; then
-    echo "Failed to gain sudo privileges!"
-    exit 1
-fi
+# Validation
+validate_name() {
+    if [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]]; then
+        echo "Invalid project name: '$1'" >&2
+        return 1
+    fi
+    return 0
+}
 
-if [[ $a1 == "${jobs[0]}" ]]; then
-    if [[ $a2 == "" ]]; then
-        echo "A new project needs a name!" >&2
-        exit 1
-    elif [[ $a2 == " " ]]; then
-        echo "Here's the thing, just a space is not enough for a project name. Nice try bud." >&2
-        exit 1
-    else
+# Main
+case "$a1" in
+    "new")
+        if ! validate_name "$a2"; then
+            echo "A new project needs a valid name!" >&2
+            exit 1
+        fi
         echo "Preparing your project..."
-        mkdir "$2/"
-        mkdir "$2/build/"
-        mkdir "$2/test/"
-        touch "$2/main.asm"
-        cp "$0 $2/"
-        echo "Finshed preparing your project in: $parent_dir/$2. Job done!"
-        exit 0
-    fi
-fi
+        mkdir -p "$a2/build" "$a2/test"
+        touch "$a2/main.asm"
+        cp "$0" "$a2/"
+        echo "Finished preparing your project in: $parent_dir/$a2. Job done!"
+        ;;
 
-if [[ $a1 == "${jobs[1]}" ]]; then
-    echo "Upgrading script..."
-    sudo curl -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
-    echo "Done!"
-    is_acceptable=true
-    exit 0
-fi
+    "upgrade")
+        echo "Upgrading script..."
+        if ! sudo -v; then
+            echo "Failed to gain sudo privileges!" >&2
+            exit 1
+        fi
+        sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
+        sudo chmod +x /usr/local/bin/basham.sh
+        echo "Upgrade complete!"
+        ;;
 
-if [[ $a1 == "${jobs[2]}" ]]; then
-    dir_path=$2
-    if [[ $a2 == "" ]]; then
-        echo "I can't delete something that doesn't exist... unless if nothing exists and if existing mean it's true that it exists, that I can delete it yet it would stay exists even if I delete its existence." >&2
-        exit 1
-    elif [[ $a2 == " " ]]; then
-        echo "I can't delete a goddamn space, I'm not Okuyasu Nijimura damn it! " >&2
-        exit 1
-    elif [[ -d "$dir_path" && -f "$dir_path/main.asm" ]]; then
-        echo "Deleting project: $dir_path"
-        cp "$0" "$2/"
-    else
-        echo "Is this really a legit assembly project?" >&2
-        exit 1
-    fi
-fi
+    "delete")
+        if ! validate_name "$a2"; then
+            echo "Can't delete an invalid name..." >&2
+            exit 1
+        elif [[ -d "$a2" && -f "$a2/main.asm" ]]; then
+            echo "Deleting project: $a2"
+            rm -rf "$a2"
+            echo "Poof! It's gone."
+        else
+            echo "Is this really a legit assembly project?" >&2
+            exit 1
+        fi
+        ;;
 
-if [[ "$a1" == "${jobs[3]}" ]]; then
-    dir_path="$2"
+    "update")
+        if ! validate_name "$a2"; then
+            echo "Invalid path. Can't update." >&2
+            exit 1
+        elif [[ -d "$a2" && -f "$a2/main.asm" ]]; then
+            echo "Updating project: $a2"
+            cp "$0" "$a2/"
+        else
+            echo "What am I supposed to update here?" >&2
+            exit 1
+        fi
+        ;;
 
-    if [[ -z "$a2" ]]; then
-        echo "I see no one's here to wash." >&2
-        exit 1
-    elif [[ "$a2" =~ ^[[:space:]]+$ ]]; then
-        echo "Uhm, hello? Is there anybody here?" >&2
-        exit 1
-    fi
+    "search")
+        echo "Searching for *.asm files..."
+        find . -type f -name "*.asm"
+        ;;
 
-    echo "Checking directory: $dir_path"
-    ls -l "$dir_path"
-
-    if [[ -d "$dir_path" && -f "$dir_path/main.asm" ]]; then
-        echo "Updating project: $dir_path"
-        cp "$0" "$2/"
-        is_acceptable=true
-    else
-        echo "What am I supposed to update here?" >&2
-        exit 1
-    fi
-fi
-
-
-if [[ $a1 == "${jobs[4]}" ]]; then
-    search_dir="."
-    file_ext="*.asm"
-    found_files=$(find "$search_dir" -type f -name "$file_ext")
-    if [[ -n $found_files ]]; then
-        echo -e "\t$found_files"
-    fi
-fi
-
-if [[ $a1 == "${jobs[5]}" ]]; then
-    if [[ -n "$a2" && $a2 != " " ]]; then
-        set -e
-        nasm -f elf32 -o build/main.o $a2
+    "build")
+        src=${a2:-main.asm}
+        echo "Building $src..."
+        nasm -f elf32 -o build/main.o "$src"
         ld -m elf_i386 -o build/main build/main.o
-        exit 0
-    else
-        set -e
+        ;;
+
+    "test")
+        src=${a2:-main.asm}
+        echo "Testing $src..."
+        nasm -f elf32 -o test/test.o "$src"
+        ld -m elf_i386 -o test/test test/test.o
+        exec ./test/test
+        ;;
+
+    "run")
+        echo "Running..."
         nasm -f elf32 -o build/main.o main.asm
         ld -m elf_i386 -o build/main build/main.o
-        exit 0
-    fi
-fi
+        exec ./build/main
+        ;;
 
-
-if [[ $a1 == "${jobs[6]}" ]]; then
-    if [[ -n "$a2" && $a2 != " " ]]; then
-        set -e
-        nasm -f elf32 -o test/test.o $a2
-        ld -m elf_i386 -o test/test test/test.o
-        exec ./test/test
-        exit 0
-    else
-        set -e
-        nasm -f elf32 -o test/test.o main.asm
-        ld -m elf_i386 -o test/test test/test.o
-        exec ./test/test
-        exit 0
-    fi
-fi
-
-if [[ $a1 == "${jobs[7]}" ]]; then
-    set -e
-    nasm -f elf32 -o build/main.o main.asm
-    ld -m elf_i386 -o build/main build/main.o
-    exec ./build/main
-    exit 0
-fi
-
-for arg in "$@"; do
-    found=false
-
-    for job in "${jobs[@]}"; do
-        if [[ "$arg" == "$job" ]]; then
-            if [[ "$is_acceptable" == true ]]; then
-                found=true
-            fi
-            break
+    *)
+        if [[ -n "$a1" ]]; then
+            echo -e "What the hell are you trying to cast here? What are you, some kind of wizard from Hogwarts?\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
+        else
+            echo -e "You put nothing... What do you want me to do? Pray to God? Well, thank you because I always do.\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
         fi
-    done
-
-    if [[ $found == false && -n $arg && $is_acceptable == false ]]; then
-        echo -e "What the hell are you trying to cast here? What are you, some kind of wizard from Hogwarts or something?\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
-    fi
-done
-
-if [[ $a1 == "" && $a2 == "" && $a3 == "" ]]; then
-    echo -e "You put nothing... What do you want me to do? Pray to God? Well, thank you becasue I always do.\n\nRTFM! https://github.com/lordpaijo/basham.git" >&2
-    exit 1
-fi
+        exit 1
+        ;;
+esac
