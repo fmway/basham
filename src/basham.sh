@@ -28,8 +28,8 @@ Commands:
 
 Examples:
   $script_name new myproj
-  $script_name build --arch arm64
-  $script_name test myfile.asm --arch x86
+  $script_name build --arch x86_64
+  $script_name test myfile.asm --arch x86_64
 EOF
 }
 
@@ -103,10 +103,9 @@ case "$a1" in
         ;;
 
     "upgrade")
-        echo "Upgrading script..."
         sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
         sudo chmod +x /usr/local/bin/basham.sh
-        echo "Upgrade complete!"
+        echo "Basham script updated!"
         ;;
 
     "delete")
