@@ -58,6 +58,17 @@ $ basham.sh build --arch x86
 $ basham.sh run --arch x86
 ```
 
+## Nix Usage
+If you don't want install it, you can execute via `nix run`
+```sh
+$ nix run github:lordpaijo/basham -- blablablablablabla
+```
+Or you can install it via `nix profile`
+```sh
+$ nix profile install github:lordpaijo/basham
+$ basham.sh blablablablablabla
+```
+
 ### Arguments
 
 List of available arguments:
