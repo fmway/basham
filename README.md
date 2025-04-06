@@ -5,6 +5,7 @@ A simple bash script to manage your assembly project.
 ## Dependencies
 - `binutils`
 - `curl`
+- `git`
 - `nasm` (x86_64)
 - `arm-none-eabi-as` (armv7l)
 - `arm-none-eabi-ld` (armv7l)
@@ -15,22 +16,22 @@ A simple bash script to manage your assembly project.
 - MacOS (Homebrew)
 ```sh
 $ brew tap ArmMbed/homebrew-formulae
-$ brew install curl nasm gcc@13 arm-none-eabi-gcc aarch64-elf-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
+$ brew install curl nasm git gcc@13 arm-none-eabi-gcc aarch64-elf-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
 ```
 
 - Ubuntu/Debian
 ```sh
-$ sudo apt install curl gcc-arm-none-eabi binutils-arm-none-eabi binutils-aarch64-linux-gnu
+$ sudo apt install curl nasm git gcc-arm-none-eabi binutils-arm-none-eabi binutils-aarch64-linux-gnu
 ```
 
 - Fedora/CentOS
 ```sh
-$ sudo dnf install curl arm-none-eabi-gcc-cs arm-none-eabi-binutils binutils-aarch64-linux-gnu
+$ sudo dnf install curl nasm git arm-none-eabi-gcc-cs arm-none-eabi-binutils binutils-aarch64-linux-gnu
 ```
 
 - Arch
 ```sh
-$ sudo pacman -S arm-none-eabi-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
+$ sudo pacman -S curl nasm git arm-none-eabi-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
 ```
 
 ## Install
