@@ -190,7 +190,6 @@ case "$a1" in
         if [[ "$a2" == "--git" && -n "$a3" && -n "$a4" ]]; then
             repo_url="$a3"
             temp_dir="$a4"
-            required=("main.asm")
 
             if [[ "$repo_url" == https://github.com/* ]]; then
                 # Strip https://github.com/ and add git@... form
@@ -201,17 +200,14 @@ case "$a1" in
             git clone "$repo_url" "$temp_dir" --quiet 2>/dev/null
             echo "🛠️  Cloning into '$temp_dir'..."
             (
-                cd "$temp_dir"
                 echo "🛠️  Verifying '$temp_dir' structure..."
-                for file in "${required[@]}"; do
-                    if [[ ! -f "$file" ]]; then
-                        echo "❌ Required file '$file' is not found in '$temp_dir', are you sure that is a legit assembly project?"
-                        cd ..
-                        rm -rf "$temp_dir"
-                        exit 1
-                    fi
-                done
+                if [[ ! -f "$temp_dir/main.asm" ]]; then
+                    echo "❌ main.asm not found in '$temp_dir'. Are you sure it's a valid assembly project?"
+                    rm -rf "$temp_dir"
+                    exit 1
+                fi
 
+                cd "$temp_dir"
                 echo "✅ Repo structure verified. Building..."
                 mkdir -p build
                 build_asm "main.asm" "build/main"
@@ -233,7 +229,7 @@ case "$a1" in
         ;;
 
     *)
-        echo -e "Unknown command: '$a1'\n"
+        echo -e "❌ Unknown command: '$a1'\n"
         show_help
         exit 1
         ;;
