@@ -62,12 +62,12 @@ $ basham.sh run --arch x86_64
 ## Nix Usage
 If you don't want to install it, you can execute via `nix run`
 ```sh
-$ nix run github:lordpaijo/basham -- blablablablablabla
+$ nix run github:lordpaijo/basham -- new blablablablablabla
 ```
 Or you can install it via `nix profile`
 ```sh
 $ nix profile install github:lordpaijo/basham
-$ basham.sh blablablablablabla
+$ basham.sh new blablablablablabla
 ```
 
 ### Arguments
