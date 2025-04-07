@@ -28,6 +28,7 @@ Commands:
   run                       Build and execute main.asm in build/
   --help                    Show this help message
   --arch <arch>             Set target architecture (x86_64, armv7l, aarch64)
+  --git                     Initialize git when making a new project
 
 Examples:
   $script_name new myproj
