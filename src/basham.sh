@@ -77,20 +77,20 @@ build_asm() {
 
     case "$arch" in
         x86_32)
-            nasm -f elf32 -o "$output.o" "$input"
-            ld -m elf_i386 -o "$output" "$output.o"
+            nasm -f elf32 -o "${output}.o" "$input"
+            ld -m elf_i386 -o "$output" "${output}.o"
             ;;
         x86_64)
-            nasm -f elf64 -o "$output.o" "$input"
-            ld -m elf_x86_64 -o "$output" "$output.o"
+            nasm -f elf64 -o "${output}.o" "$input"
+            ld -m elf_x86_64 -o "$output" "${output}.o"
             ;;
         armv7l)
-            arm-none-eabi-as -o "$output.o" "$input"
-            arm-none-eabi-ld -o "$output" "$output.o"
+            arm-none-eabi-as -o "${output}.o" "$input"
+            arm-none-eabi-ld -o "$output" "${output}.o"
             ;;
         aarch64)
-            aarch64-linux-gnu-as -o "$output.o" "$input"
-            aarch64-linux-gnu-ld -o "$output" "$output.o"
+            aarch64-linux-gnu-as -o "${output}.o" "$input"
+            aarch64-linux-gnu-ld -o "$output" "${output}.o"
             ;;
         *)
             echo "Unsupported architecture: $arch" >&2
@@ -98,6 +98,7 @@ build_asm() {
             ;;
     esac
 }
+
 
 case "$a1" in
     "new")
@@ -171,11 +172,38 @@ case "$a1" in
         ;;
 
     "build")
-        src=${a2:-main.asm}
-        echo "🛠️  Building $src for $arch..."
-        build_asm "$src" "build/main"
-        file build/main
-        echo "✅ '$a2' is successfully built."
+        if [[ "$a2" == "--git" && -n "$a3" && -n "$a4" ]]; then
+            repo_url="$a3"
+            temp_dir="$a4"
+            src="main.asm"
+            output_dir="${a5:-$temp_dir/build}"
+
+            if [[ "$repo_url" == https://github.com/* ]]; then
+                # Strip https://github.com/ and add git@... form
+                repo_path="${repo_url#https://github.com/}"
+                repo_url="git@github.com:${repo_path}"
+            fi
+
+            git clone --quiet "$repo_url" "$temp_dir"
+            if [[ ! -f "$temp_dir/$src" ]]; then
+                echo "❌ Required file '$src' not found in '$temp_dir'"
+                rm -rf "$temp_dir"
+                exit 1
+            fi
+
+            mkdir -p "$output_dir"
+
+            echo "🛠️  Building $src from $temp_dir..."
+            build_asm "$temp_dir/$src" "$output_dir/main"
+            file "$output_dir/main"
+            echo "✅ '$src' successfully built to $output_dir/main"
+        else
+            src="${a2:-main.asm}"
+            echo "🛠️  Building $src for $arch..."
+            build_asm "$src" "build/main"
+            file build/main
+            echo "✅ '$src' is successfully built."
+        fi
         ;;
 
     "test")
@@ -197,7 +225,7 @@ case "$a1" in
                 repo_url="git@github.com:${repo_path}"
             fi
 
-            git clone "$repo_url" "$temp_dir" --quiet 2>/dev/null
+            git clone "$repo_url" "$temp_dir" --quiet
             echo "🛠️  Cloning into '$temp_dir'..."
             (
                 echo "🛠️  Verifying '$temp_dir' structure..."
