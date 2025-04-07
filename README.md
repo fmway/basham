@@ -93,6 +93,8 @@ Fortunately, there are more than one specifier (which is unfortunate for me to m
 | `--arch`   | Specify the build architecture. |
 | `--git`    | Integrate git with the passed arguments. |
 
+
+Have a full documentation here -> [click me please daddy~](https://github.com/lordpaijo/basham/blob/master/documentation.md)
 ---
 
 Have fun.
