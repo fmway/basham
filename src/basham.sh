@@ -105,14 +105,18 @@ case "$a1" in
         touch "$a2/main.asm"
         cp "$0" "$a2/"
 
+        gitignore_echo() {
+            grep -qxF "$1" .gitignore || echo "$1" >> .gitignore
+        }
+
         if [[ " $@ " =~ " --git " ]]; then
-                (
-                    cd "$a2"
-                    git init --initial-branch=main
-                    echo "build/" >> .gitignore
-                    echo "test/" >> .gitignore
-                )
-                echo "Initialized Git repository in $a2/"
+            (
+                cd "$a2" || exit 1
+                git init --initial-branch=main > /dev/null 2>&1
+                gitignore_echo "build/"
+                gitignore_echo "test/"
+            )
+            echo "Initialized Git repository in $a2/"
         fi
 
         echo "Finished preparing your project in: $parent_dir/$a2"
