@@ -102,11 +102,11 @@ build_asm() {
 case "$a1" in
     "new")
         if ! validate_name "$a2"; then
-            echo "A new project needs a valid name!" >&2
+            echo "❌ A new project needs a valid name!" >&2
             exit 1
         fi
 
-        echo "Preparing your project..."
+        echo "🛠️  Preparing your project..."
         mkdir -p "$a2/build" "$a2/test"
         touch "$a2/main.asm"
         cp "$0" "$a2/"
@@ -125,60 +125,64 @@ case "$a1" in
                 gitignore_echo "build/"
                 gitignore_echo "test/"
             )
-            echo "Initialized Git repository in $a2/"
+            echo "✅ Initialized Git repository in $a2/"
         fi
 
-        echo "Finished preparing your project in: $parent_dir/$a2"
+        echo "✅ Finished preparing your project in: $parent_dir/$a2"
         ;;
 
     "upgrade")
         sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
         sudo chmod +x /usr/local/bin/basham.sh
-        echo "Basham script updated!"
+        echo "✅ Basham script updated!"
         ;;
 
     "delete")
         if ! validate_name "$a2"; then
-            echo "Can't delete an invalid name..." >&2
+            echo "❌ Can't delete an invalid name..." >&2
             exit 1
         elif [[ -d "$a2" && -f "$a2/main.asm" ]]; then
-            echo "Deleting project: $a2"
+            echo "🛠️  Deleting project: $a2"
             rm -rf "$a2"
-            echo "Poof! It's gone."
+            echo "✅ Poof! It's gone."
         else
-            echo "Is this really a legit assembly project?" >&2
+            echo "❌ Is this really a legit assembly project?" >&2
             exit 1
         fi
         ;;
 
     "update")
         if ! validate_name "$a2"; then
-            echo "Invalid path. Can't update." >&2
+            echo "❌ Invalid path. Can't update." >&2
             exit 1
         elif [[ -d "$a2" && -f "$a2/main.asm" ]]; then
-            echo "Updating project: $a2"
+            echo "🛠️  Updating project: $a2"
             cp "$0" "$a2/"
+            echo "✅ '$a2' is successfully updated!"
         else
-            echo "What am I supposed to update here?" >&2
+            echo "❌ What am I supposed to update here?" >&2
             exit 1
         fi
         ;;
 
     "search")
-        echo "Searching for *.asm files..."
+        echo "🛠️  Searching for *.asm files..."
         find . -type f -name "*.asm"
         ;;
 
     "build")
         src=${a2:-main.asm}
-        echo "Building $src for $arch..."
+        echo "🛠️  Building $src for $arch..."
         build_asm "$src" "build/main"
+        file build/main
+        echo "✅ '$a2' is successfully built."
         ;;
 
     "test")
         src=${a2:-main.asm}
-        echo "Testing $src for $arch..."
+        echo "🚀  Testing $src for $arch..."
         build_asm "$src" "test/test"
+        file test/test
         exec ./test/test
         ;;
 
@@ -221,8 +225,9 @@ case "$a1" in
                 }
             )
         else
-            echo "Running local project..."
+            echo "🚀 Running local project..."
             build_asm "main.asm" "build/main"
+            file build/main
             exec ./build/main
         fi
         ;;
