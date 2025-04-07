@@ -115,6 +115,7 @@ case "$a1" in
             (
                 cd "$a2" || exit 1
                 git init --initial-branch=main > /dev/null 2>&1
+                touch README.md
                 gitignore_echo "build/"
                 gitignore_echo "test/"
             )
