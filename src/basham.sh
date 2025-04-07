@@ -106,7 +106,9 @@ case "$a1" in
         cp "$0" "$a2/"
 
         gitignore_echo() {
-            grep -qxF "$1" .gitignore || echo "$1" >> .gitignore
+            local entry="$1"
+            touch .gitignore
+            grep -qxF "$entry" .gitignore || echo "$entry" >> .gitignore
         }
 
         if [[ " $@ " =~ " --git " ]]; then
