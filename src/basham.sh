@@ -34,6 +34,7 @@ Examples:
   $script_name new myproj --git
   $script_name build --arch x86_64
   $script_name test myfile.asm --arch x86_64
+  $script_name run --git https://github.com/lordpaijo/testbasham.git 'free skibidi'
 EOF
 }
 
