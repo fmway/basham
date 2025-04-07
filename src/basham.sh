@@ -31,7 +31,7 @@ Commands:
   --git                     Initialize git when making a new project
 
 Examples:
-  $script_name new myproj
+  $script_name new myproj --git
   $script_name build --arch x86_64
   $script_name test myfile.asm --arch x86_64
 EOF
