@@ -60,6 +60,7 @@ set -- "${POSITIONAL[@]}"
 a1=$1
 a2=$2
 a3=$3
+a4=$4
 
 validate_name() {
     if [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]]; then
@@ -74,9 +75,13 @@ build_asm() {
     local output=$2
 
     case "$arch" in
-        x86_64)
+        x86_32)
             nasm -f elf32 -o "$output.o" "$input"
             ld -m elf_i386 -o "$output" "$output.o"
+            ;;
+        x86_64)
+            nasm -f elf64 -o "$output.o" "$input"
+            ld -m elf_x86_64 -o "$output" "$output.o"
             ;;
         armv7l)
             arm-none-eabi-as -o "$output.o" "$input"
@@ -177,9 +182,48 @@ case "$a1" in
         ;;
 
     "run")
-        echo "Running for $arch..."
-        build_asm "main.asm" "build/main"
-        exec ./build/main
+        if [[ "$a2" == "--git" && -n "$a3" && -n "$a4" ]]; then
+            repo_url="$a3"
+            temp_dir="$a4"
+            required=("main.asm")
+
+            if [[ "$repo_url" == https://github.com/* ]]; then
+                # Strip https://github.com/ and add git@... form
+                repo_path="${repo_url#https://github.com/}"
+                repo_url="git@github.com:${repo_path}"
+            fi
+
+            git clone "$repo_url" "$temp_dir" --quiet 2>/dev/null
+            echo "🛠️  Cloning into '$temp_dir'..."
+            (
+                cd "$temp_dir"
+                echo "🛠️  Verifying '$temp_dir' structure..."
+                for file in "${required[@]}"; do
+                    if [[ ! -f "$file" ]]; then
+                        echo "❌ Required file '$file' is not found in '$temp_dir', are you sure that is a legit assembly project?"
+                        cd ..
+                        rm -rf "$temp_dir"
+                        exit 1
+                    fi
+                done
+
+                echo "✅ Repo structure verified. Building..."
+                mkdir -p build
+                build_asm "main.asm" "build/main"
+
+                echo "🚀 Running project from '$temp_dir'"
+                chmod +x build/main
+                ./build/main || {
+                    echo "❌ Failed to execute binary. You may got a wrong format or you're intentionally returning with an error code."
+                    file build/main
+                    exit 1
+                }
+            )
+        else
+            echo "Running local project..."
+            build_asm "main.asm" "build/main"
+            exec ./build/main
+        fi
         ;;
 
     *)
