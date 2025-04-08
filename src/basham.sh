@@ -75,7 +75,7 @@ build_asm() {
     local output=$2
 
     case "$arch" in
-        x86_32)
+        i386)
             nasm -f elf32 -o "${output}.o" "$input"
             ld -m elf_i386 -o "$output" "${output}.o"
             ;;

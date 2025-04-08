@@ -75,7 +75,7 @@ build_asm() {
     local output=$2
 
     case "$arch" in
-        x86_32)
+        i386)
             nasm -f elf32 -o "${output}.o" "$input"
             ld -m elf_i386 -o "$output" "${output}.o"
             ;;
@@ -134,11 +134,13 @@ case "$a1" in
     "upgrade")
         case $a2 in
             "--local")
+                echo "🛠️  Upgrading script in /usr/local/bin/basham.sh..."
                 sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
                 sudo chmod +x /usr/local/bin/basham.sh
                 echo "✅ Basham script updated at /usr/local/bin/basham.sh !"
                 ;;
             "--shared")
+                echo "🛠️  Upgrading script in /usr/bin/basham.sh..."
                 sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
                 sudo chmod +x /usr/bin/basham.sh
                 echo "✅ Basham script updated at /usr/bin/basham.sh !"
@@ -294,6 +296,67 @@ case "$a1" in
         rm build/*
         rm test/*
         echo "✅ Cleaned up."
+        ;;
+
+    "install")
+        as_what=${a2:-main}
+
+        if [[ "$a3" == "--git" && -n "$a4" ]]; then
+            repo_url="$a4"
+            temp_dir="$a5"
+            install_mode="$a6"
+
+            src="main.asm"
+            output_dir="${a7:-$temp_dir/build}"
+
+            if [[ "$repo_url" == https://github.com/* ]]; then
+                echo "🌐 Cloning via HTTPS..."
+            elif [[ "$repo_url" == git@github.com:* ]]; then
+                echo "🔐 Cloning via SSH..."
+            else
+                echo "❌ Unrecognized repo URL: $repo_url"
+                exit 1
+            fi
+
+            git clone --quiet "$repo_url" "$temp_dir"
+            if [[ ! -f "$temp_dir/$src" ]]; then
+                echo "❌ Required file '$src' not found in '$temp_dir'"
+                rm -rf "$temp_dir"
+                exit 1
+            fi
+
+            mkdir -p "$output_dir"
+            echo "🛠️  Building $src from $temp_dir..."
+            build_asm "$temp_dir/$src" "$output_dir/main"
+
+            binary_path="$output_dir/main"
+
+        else
+            echo "🛠️  Installing from local project..."
+            $0 build
+            binary_path="build/main"
+            install_mode="$a3"
+        fi
+
+        case $install_mode in
+            "--local")
+                echo "📦 Installing to /usr/local/bin/$as_what..."
+                sudo mv "$binary_path" /usr/local/bin/$as_what
+                sudo chmod +x /usr/local/bin/$as_what
+                ;;
+            "--shared")
+                echo "📦 Installing to /usr/bin/$as_what..."
+                sudo mv "$binary_path" /usr/bin/$as_what
+                sudo chmod +x /usr/bin/$as_what
+                ;;
+            *)
+                echo "📦 Installing to /usr/local/bin/$as_what..."
+                sudo mv "$binary_path" /usr/local/bin/$as_what
+                sudo chmod +x /usr/local/bin/$as_what
+                ;;
+        esac
+
+        echo "✅ Installed as '$as_what'"
         ;;
 
     *)
