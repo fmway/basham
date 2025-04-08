@@ -83,6 +83,8 @@ List of available arguments:
 | `build` | Build the main executable of the project and putting it into `build` directory. |
 | `test` | Build the test executable and putting it into `test` directory before running it. |
 | `run` | Rebuild and run the main executable . |
+| `clean` | Clean the build and test directory. |
+| `install` | Install the executable system wide. |
 
 ### Specifiers
 
@@ -92,6 +94,8 @@ Fortunately, there are more than one specifier (which is unfortunate for me to m
 | `--help`   | Show help message with usage instructions. |
 | `--arch`   | Specify the build architecture. |
 | `--git`    | Integrate git with the passed arguments. |
+| `--local`  | Storing in `/usr/local/bin/` |
+| `--shared` | Storing in `/usr/bin/` |
 
 
 Have a full documentation here -> [click me please daddy~](https://github.com/lordpaijo/basham/blob/master/documentation.md)
