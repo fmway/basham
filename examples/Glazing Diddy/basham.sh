@@ -132,9 +132,23 @@ case "$a1" in
         ;;
 
     "upgrade")
-        sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
-        sudo chmod +x /usr/local/bin/basham.sh
-        echo "✅ Basham script updated!"
+        case $a2 in
+            "--local")
+                sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
+                sudo chmod +x /usr/local/bin/basham.sh
+                echo "✅ Basham script updated at /usr/local/bin/basham.sh !"
+                ;;
+            "--shared")
+                sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
+                sudo chmod +x /usr/bin/basham.sh
+                echo "✅ Basham script updated at /usr/bin/basham.sh !"
+                ;;
+            *)
+                sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"
+                sudo chmod +x /usr/local/bin/basham.sh
+                echo "✅ Basham script updated!"
+                ;;
+        esac
         ;;
 
     "delete")
@@ -273,6 +287,13 @@ case "$a1" in
             file build/main
             exec ./build/main
         fi
+        ;;
+
+    "clean" )
+        echo "🧹 Cleaning up..."
+        rm build/*
+        rm test/*
+        echo "✅ Cleaned up."
         ;;
 
     *)
