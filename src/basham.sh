@@ -180,9 +180,13 @@ case "$a1" in
             output_dir="${a5:-$temp_dir/build}"
 
             if [[ "$repo_url" == https://github.com/* ]]; then
-                # Strip https://github.com/ and add git@... form
-                repo_path="${repo_url#https://github.com/}"
-                repo_url="git@github.com:${repo_path}"
+                echo "🌐 Cloning via HTTPS..."
+                # leave it as-is to allow public repo access without SSH
+            elif [[ "$repo_url" == git@github.com:* ]]; then
+                echo "🔐 Cloning via SSH..."
+            else
+                echo "❌ Unrecognized repo URL: $repo_url"
+                exit 1
             fi
 
             git clone --quiet "$repo_url" "$temp_dir"
@@ -221,9 +225,13 @@ case "$a1" in
             temp_dir="$a4"
 
             if [[ "$repo_url" == https://github.com/* ]]; then
-                # Strip https://github.com/ and add git@... form
-                repo_path="${repo_url#https://github.com/}"
-                repo_url="git@github.com:${repo_path}"
+                echo "🌐 Cloning via HTTPS..."
+                # leave it as-is to allow public repo access without SSH
+            elif [[ "$repo_url" == git@github.com:* ]]; then
+                echo "🔐 Cloning via SSH..."
+            else
+                echo "❌ Unrecognized repo URL: $repo_url"
+                exit 1
             fi
 
             git clone "$repo_url" "$temp_dir" --quiet
