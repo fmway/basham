@@ -306,18 +306,21 @@ case "$a1" in
                 $0 build
                 sudo mv build/main /usr/local/bin/$as_what
                 sudo chmod +x /usr/local/bin/$as_what
+                echo "✅ Finished installing at /usr/local/bin/$as_what"
                 ;;
             "--shared")
                 echo "🛠️  Installing script to /usr/bin/basham.sh..."
                 $0 build
                 sudo mv build/main /usr/bin/$as_what
                 sudo chmod +x /usr/bin/$as_what
+                echo "✅ Finished installing at /usr/bin/$as_what"
                 ;;
             *)
                 echo "🛠️  Installing script..."
                 $0 build
                 sudo mv build/main /usr/local/bin/$as_what
                 sudo chmod +x /usr/local/bin/$as_what
+                echo "✅ Finished installing"
                 ;;
         esac
         ;;
