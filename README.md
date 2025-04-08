@@ -35,16 +35,14 @@ $ sudo pacman -S curl nasm git arm-none-eabi-gcc arm-none-eabi-binutils aarch64-
 ```
 
 ## Install
-Clone and `cd` to the repo.
-```sh
-$ git clone https://github.com/lordpaijo/basham.git
-$ cd basham
-```
 
-Add the script to your path and make it executable.
+You can install it system wide via `curl`:
 ```
-$ mv src/basham.sh /usr/local/bin/basham.sh
-$ chmod +x /usr/local/bin/basham.sh
+$ sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   local
+$ sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   shared
+
+$ sudo chmod +x /usr/local/bin/basham.sh    #   local
+$ sudo chmod +x /usr/bin/basham.sh          #   shared
 ```
 
 And you're good to go.
