@@ -13,7 +13,7 @@ _start:
     mov ecx, msg1
     mov edx, len1
     int 0x80
-    
+
     mov eax, 4
     mov ebx, 1
     mov ecx, msg2
@@ -21,5 +21,5 @@ _start:
     int 0x80
 
     mov eax, 1
-    mov ebx, 1945
+    mov ebx, 1
     int 0x80

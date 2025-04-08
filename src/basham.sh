@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 parent_dir=$(pwd)
 script_name=$(basename "$0")
 POSITIONAL=()
@@ -213,10 +211,22 @@ case "$a1" in
 
     "test")
         src=${a2:-main.asm}
-        echo "🚀  Testing $src for $arch..."
+        echo "🚀 Testing $src for $arch..."
         build_asm "$src" "test/test"
-        file test/test
-        exec ./test/test
+
+        if [[ ! -f test/test ]]; then
+            echo "❌ Build failed: 'test/test' not found."
+            exit 1
+        fi
+
+        exec test/test >/dev/null 2>&1
+        exit_code=$?
+
+        if [[ $exit_code -eq 0 ]]; then
+            echo "✅ Test passed: '$src' exited with code 0."
+        else
+            echo "❌ Test failed: '$src' exited with code $exit_code."
+        fi
         ;;
 
     "run")
