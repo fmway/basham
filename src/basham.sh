@@ -300,29 +300,63 @@ case "$a1" in
 
     "install")
         as_what=${a2:-main}
-        case $a3 in
+
+        if [[ "$a3" == "--git" && -n "$a4" ]]; then
+            repo_url="$a4"
+            temp_dir="$a5"
+            install_mode="$a6"
+
+            src="main.asm"
+            output_dir="${a7:-$temp_dir/build}"
+
+            if [[ "$repo_url" == https://github.com/* ]]; then
+                echo "🌐 Cloning via HTTPS..."
+            elif [[ "$repo_url" == git@github.com:* ]]; then
+                echo "🔐 Cloning via SSH..."
+            else
+                echo "❌ Unrecognized repo URL: $repo_url"
+                exit 1
+            fi
+
+            git clone --quiet "$repo_url" "$temp_dir"
+            if [[ ! -f "$temp_dir/$src" ]]; then
+                echo "❌ Required file '$src' not found in '$temp_dir'"
+                rm -rf "$temp_dir"
+                exit 1
+            fi
+
+            mkdir -p "$output_dir"
+            echo "🛠️  Building $src from $temp_dir..."
+            build_asm "$temp_dir/$src" "$output_dir/main"
+
+            binary_path="$output_dir/main"
+
+        else
+            echo "🛠️  Installing from local project..."
+            $0 build
+            binary_path="build/main"
+            install_mode="$a3"
+        fi
+
+        case $install_mode in
             "--local")
-                echo "🛠️  Installing script to /usr/bin/basham.sh..."
-                $0 build
-                sudo mv build/main /usr/local/bin/$as_what
+                echo "📦 Installing to /usr/local/bin/$as_what..."
+                sudo mv "$binary_path" /usr/local/bin/$as_what
                 sudo chmod +x /usr/local/bin/$as_what
-                echo "✅ Finished installing at /usr/local/bin/$as_what"
                 ;;
             "--shared")
-                echo "🛠️  Installing script to /usr/bin/basham.sh..."
-                $0 build
-                sudo mv build/main /usr/bin/$as_what
+                echo "📦 Installing to /usr/bin/$as_what..."
+                sudo mv "$binary_path" /usr/bin/$as_what
                 sudo chmod +x /usr/bin/$as_what
-                echo "✅ Finished installing at /usr/bin/$as_what"
                 ;;
             *)
-                echo "🛠️  Installing script..."
-                $0 build
-                sudo mv build/main /usr/local/bin/$as_what
+                echo "📦 Installing to /usr/local/bin/$as_what..."
+                sudo mv "$binary_path" /usr/local/bin/$as_what
                 sudo chmod +x /usr/local/bin/$as_what
-                echo "✅ Finished installing"
                 ;;
         esac
+
+        echo "✅ Installed as '$as_what'"
         ;;
 
     *)
