@@ -44,5 +44,6 @@ And here's a break down!
 | `upgrade` | `--shared` | Upgrade the script in `/usr/bin/`. |
 | `install` | `--local` | Install the executable in `/usr/local/bin/`. |
 | `install` | `--shared` | Install the executable in `/usr/bin/`. |
+| `install` | `--git` | Install from a github repository. |
 
 ---
