@@ -5,6 +5,7 @@ with pkgs; let
       #!/bin/env ${lib.getExe bash}
       export PATH=$PATH:${lib.makeBinPath [
         findutils
+        git
       ]}
     '';
     "nasm" = lib.getExe' coreboot-toolchain.x64 "nasm";
