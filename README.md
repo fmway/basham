@@ -24,8 +24,8 @@ $ ./install.sh --shared   # Shared install (to /usr/bin)
 
 Or if the installer script doesn't cover, you could install it via `curl` (requires dependencies installed manually):
 ```
-$ sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   local
-$ sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   shared
+$ sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  # local
+$ sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  # shared
 
 $ sudo chmod +x /usr/local/bin/basham.sh    # local
 $ sudo chmod +x /usr/bin/basham.sh          # shared
