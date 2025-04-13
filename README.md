@@ -16,7 +16,7 @@ A simple bash script to manage your assembly project.
 
 Using `install.sh` installer script:
 ```sh
-$ git clone https://github.com/lordpaijo/basham.git
+$ git clone https://github.com/lordpaijo/basham.git && cd basham/
 $ chmod +x install.sh
 $ ./install.sh            # Local install (to /usr/local/bin)
 $ ./install.sh --shared   # Shared install (to /usr/bin)
