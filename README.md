@@ -85,4 +85,4 @@ Fortunately, there are more than one specifier (which is unfortunate for me to m
 Have a full documentation here -> [click me please daddy~](https://github.com/lordpaijo/basham/blob/master/documentation.md)
 ---
 
-Have fun.
+And have fun~...
