@@ -12,37 +12,23 @@ A simple bash script to manage your assembly project.
 - `aarch64-linux-gnu-as` (aarch64)
 - `aarch64-linux-gnu-ld` (aarch64)
 
-### Here's how you can install them:
-- MacOS (Homebrew)
-```sh
-$ brew tap ArmMbed/homebrew-formulae
-$ brew install curl nasm git gcc@13 arm-none-eabi-gcc aarch64-elf-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
-```
-
-- Ubuntu/Debian
-```sh
-$ sudo apt install curl nasm git gcc-arm-none-eabi binutils-arm-none-eabi binutils-aarch64-linux-gnu
-```
-
-- Fedora/CentOS
-```sh
-$ sudo dnf install curl nasm git arm-none-eabi-gcc-cs arm-none-eabi-binutils binutils-aarch64-linux-gnu
-```
-
-- Arch
-```sh
-$ sudo pacman -S curl nasm git arm-none-eabi-gcc arm-none-eabi-binutils aarch64-linux-gnu-binutils
-```
-
 ## Install
 
-You can install it system wide via `curl`:
+Using `install.sh` installer script:
+```sh
+$ git clone https://github.com/lordpaijo/basham.git
+$ chmod +x install.sh
+$ ./install.sh            # Local install (to /usr/local/bin)
+$ ./install.sh --shared   # Shared install (to /usr/bin)
+```
+
+Or if the installer script doesn't cover, you could install it via `curl` (requires dependencies installed manually):
 ```
 $ sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   local
 $ sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  #   shared
 
-$ sudo chmod +x /usr/local/bin/basham.sh    #   local
-$ sudo chmod +x /usr/bin/basham.sh          #   shared
+$ sudo chmod +x /usr/local/bin/basham.sh    # local
+$ sudo chmod +x /usr/bin/basham.sh          # shared
 ```
 
 And you're good to go.

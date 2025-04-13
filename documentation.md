@@ -1,6 +1,6 @@
 # How the hell you gon' use it twin?
 
-Simple, `basham.sh <args> <specifiers (optional)>`
+Simple, `basham.sh <args> <specifiers (optional)`
 
 ## Usage
 ### Arguments
