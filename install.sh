@@ -53,7 +53,7 @@ download_script() {
     sudo curl -fsSL -o "$INSTALL_PATH/$SCRIPT_NAME" "$SCRIPT_URL"
     sudo chmod +x "$INSTALL_PATH/$SCRIPT_NAME"
     alias bin_path="$INSTALL_PATH/$SCRIPT_NAME"
-    if [[ $(bin_path --test) == 'passed' ]]; then
+    if [[ $(bin_path --testbin) == 'passed' ]]; then
         echo "[basham] Installed successfully at $INSTALL_PATH/$SCRIPT_NAME"
         exit 1
     else
