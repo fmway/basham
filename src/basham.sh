@@ -298,6 +298,11 @@ case "$a1" in
         echo "✅ Cleaned up."
         ;;
 
+    "testbin")
+        echo "passed"
+        exit
+        ;;
+
     "install")
         as_what=${a2:-main}
 
