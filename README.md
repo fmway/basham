@@ -19,7 +19,7 @@ Using `install.sh` installer script:
 $ git clone https://github.com/lordpaijo/basham.git && cd basham/
 $ chmod +x install.sh
 $ ./install.sh            # Local install (to /usr/local/bin)
-$ ./install.sh --shared   # Shared install (to /usr/bin)
+$ ./install.sh --shared   # Shared install (to /usr/bin) [ root permission required ]
 ```
 
 Or if the installer script doesn't cover, you could install it via `curl` (requires dependencies installed manually):
@@ -28,7 +28,7 @@ $ sudo curl -fsSL -o /usr/local/bin/basham.sh "https://raw.githubusercontent.com
 $ sudo curl -fsSL -o /usr/bin/basham.sh "https://raw.githubusercontent.com/lordpaijo/basham/refs/heads/master/src/basham.sh"  # shared
 
 $ sudo chmod +x /usr/local/bin/basham.sh    # local
-$ sudo chmod +x /usr/bin/basham.sh          # shared
+$ sudo chmod +x /usr/bin/basham.sh          # shared [ root permission required ]
 ```
 
 And you're good to go.
