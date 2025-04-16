@@ -39,6 +39,10 @@ EOF
 # Parse arguments and detect --arch and --help
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --testbin)
+            echo "passed"
+            exit
+            ;;
         --arch)
             shift
             arch="$1"

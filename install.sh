@@ -10,6 +10,11 @@ echo "[basham] Starting install..."
 
 # Check for shared flag
 if [[ "$1" == "--shared" ]]; then
+    if ! [[ $(whoami) == 'root' ]]; then
+        echo "Require root permissions to install basham as shared binaries";
+        exit 1
+    fi
+
     INSTALL_PATH="/usr/bin"
     echo "[basham] Shared install selected: $INSTALL_PATH"
 fi
@@ -47,7 +52,14 @@ download_script() {
     echo "[basham] Downloading script to $INSTALL_PATH/$SCRIPT_NAME..."
     sudo curl -fsSL -o "$INSTALL_PATH/$SCRIPT_NAME" "$SCRIPT_URL"
     sudo chmod +x "$INSTALL_PATH/$SCRIPT_NAME"
-    echo "[basham] Installed successfully at $INSTALL_PATH/$SCRIPT_NAME"
+    alias bin_path="$INSTALL_PATH/$SCRIPT_NAME"
+    if [[ $(bin_path --testbin) == 'passed' ]]; then
+        echo "[basham] Installed successfully at $INSTALL_PATH/$SCRIPT_NAME"
+        exit 1
+    else
+        echo "[basham] Installation failed"
+        exit 1
+    fi
 }
 
 install_deps
