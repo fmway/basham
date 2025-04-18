@@ -4,5 +4,5 @@ like features, patches, or something else that doesn't relate to inappropriate a
 It's not the best so instead of hoping it being the best, I'm hoping you as contributors to give all of your best.
 
 
-sincerely,
+Sincerely, <br>
 Iyan.
